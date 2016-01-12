@@ -18,11 +18,12 @@ if __name__ == '__main__':
     print "Current records: ", len(database)
     print
 
-    for photo_id, url, x, y, w, h in database:
+    for photo_id, url, username, x, y, w, h in database:
         filename = os.path.split(url)[-1]
         path = image_root + filename
         img = cv2.imread(path, cv2.IMREAD_COLOR)
         cv2.rectangle(img, (x,y), (x+w, y+h), (0,0,255), 2)
+        cv2.putText(img, username, (10, 30), cv2.FONT_HERSHEY_COMPLEX, 1, (255, 0, 0), 2, cv2.CV_AA)
 
         # Error handling
         if img is None:
