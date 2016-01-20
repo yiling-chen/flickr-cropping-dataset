@@ -15,12 +15,12 @@ def generate_comparison(image, x, y, w, h):
     height, width, channel = image.shape
     print height
     print x, y, w, h
-
+    '''
     if x < 0:
         x = 0
     if y < 0:
         y = 0
-
+    '''
     scale_o = float(h) / height    # scaling factor of the original image
     new_width = int(width * (float(h) / height))
 
@@ -32,9 +32,14 @@ def generate_comparison(image, x, y, w, h):
     canvas = np.ones([total_height, total_width, 3], dtype=np.uint8) * 255
     print 'canvas:', canvas.shape
     res = cv2.resize(img, (new_width, h), interpolation=cv2.INTER_CUBIC)
-    #print res.shape
-    canvas[:, :res.shape[1], :] = res
-    canvas[:crop.shape[0], res.shape[1]+100:res.shape[1]+100+w, :] = crop
+    print 'res:', res.shape
+
+    if randint(0,1) == 1:
+        canvas[:res.shape[0], :res.shape[1], :] = res
+        canvas[:crop.shape[0], res.shape[1]+100:res.shape[1]+100+crop.shape[1], :] = crop
+    else:
+        canvas[:crop.shape[0], :crop.shape[1], :] = crop
+        canvas[:res.shape[0], crop.shape[1]+100:crop.shape[1]+100+res.shape[1], :] = res
 
     if total_width > total_height:
         scale = 1400.0 / total_width
