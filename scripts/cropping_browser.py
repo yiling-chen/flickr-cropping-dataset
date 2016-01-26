@@ -47,14 +47,16 @@ def generate_comparison(image, x, y, w, h):
         cv2.imshow('Comparison', res)
 
 def lookup_users():
-    username_pool = set()
+    username_pool = dict()
     database = pickle.load( open('../cropping_results.pkl', 'rb') )
     for photo_id, url, username, x, y, w, h in database:
-        if username not in username_pool:
-            username_pool.add(username)
+        if username not in username_pool.keys():
+            username_pool[username] = 1
+        else:
+            username_pool[username] += 1
 
-    for username in username_pool:
-        print username
+    for username in username_pool.keys():
+        print username, ':', username_pool[username]
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(
