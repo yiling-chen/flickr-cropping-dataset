@@ -12,6 +12,7 @@ except:
     import pickle
 
 image_root = '../images/'
+crop_root = '../crops/'
 
 def generate_comparison(image, x, y, w, h):
     height, width, channel = image.shape
@@ -101,8 +102,11 @@ if __name__ == '__main__':
         generate_comparison(image=img, x=x, y=y, w=w, h=h)
 
         cv2.rectangle(img, (x,y), (x+w, y+h), (0,0,255), 2)
-        cv2.putText(img, username, (10, 30), cv2.FONT_HERSHEY_COMPLEX, 1, (255, 0, 0), 2, cv2.CV_AA)
-        cv2.imshow('Cropping', img)
+        #cv2.putText(img, username, (10, 30), cv2.FONT_HERSHEY_COMPLEX, 1, (255, 0, 0), 2, cv2.CV_AA)
+        new_height = int( 640.0/img.shape[1] * img.shape[0])
+        res = cv2.resize(img, (640, new_height), interpolation=cv2.INTER_CUBIC)
+        cv2.imshow('Cropping', res)
+        cv2.imwrite(crop_root+filename, res)
         key = cv2.waitKey(0)
 
         if key == 27:
