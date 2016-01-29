@@ -13,14 +13,12 @@
 
     Author: Yi-Ling Chen (yiling.chen.ntu@gmail.com)
 """
-
+from boto.mturk.price import Price
 from boto.mturk.connection import MTurkConnection
 from boto.mturk.question import ExternalQuestion, QuestionContent, Question, QuestionForm
 from boto.mturk.question import Overview,AnswerSpecification,SelectionAnswer,FormattedContent
 from boto.mturk.qualification import Qualifications, Requirement
 
-ACCESS_ID = ''
-SECRET_KEY = ''
 
 class PhotoQualityQualificationTest(object):
     """
@@ -124,14 +122,14 @@ class PhotoQualityQualificationTest(object):
 
         question_key = "<Question><QuestionIdentifier>raw_photo</QuestionIdentifier>"
         question_key = question_key + "<AnswerOption><SelectionIdentifier>0</SelectionIdentifier>"
-        question_key = question_key + "<AnswerScore>1</AnswerScore></AnswerOption></Question>"
+        question_key = question_key + "<AnswerScore>100</AnswerScore></AnswerOption></Question>"
 
         answer_key = answer_key + question_key
 
         # Add map
         value_map = "<QualificationValueMapping><RangeMapping><SummedScoreRange>"
-        value_map = value_map + "<InclusiveLowerBound>0</InclusiveLowerBound><InclusiveUpperBound>1</InclusiveUpperBound>"
-        value_map = value_map + "<QualificationValue>1</QualificationValue></SummedScoreRange>"
+        value_map = value_map + "<InclusiveLowerBound>0</InclusiveLowerBound><InclusiveUpperBound>100</InclusiveUpperBound>"
+        value_map = value_map + "<QualificationValue>50</QualificationValue></SummedScoreRange>"
         value_map = value_map + "<OutOfRangeQualificationValue>0</OutOfRangeQualificationValue>"
         value_map = value_map + "</RangeMapping></QualificationValueMapping>"
 
@@ -314,6 +312,9 @@ if __name__ == '__main__':
     # http://code.google.com/p/boto/wiki/BotoConfig
     host = "mechanicalturk.sandbox.amazonaws.com"
 
+    # Open MTurk connection
+    mturk = MTurkConnection(host=host)
+
     title = "Qualification test for photo quality assessment."
 
     # Create qualification test object
@@ -321,15 +322,42 @@ if __name__ == '__main__':
 
     # Qualification Type info
     # qual_name = "Coder Qualification Test "+datetime.now().strftime("%s")
-    qual_name = "Photo Qualification Test #"
+    qual_name = "Photo Qualification Test # 2"
     qual_description = "A qualification test in which you are given pairs of photos and asked to pick the relatively beautiful one."
     qual_keywords = ["photo","quality","ranking"]
     duration = 30*60
 
-    # Open MTurk connection
-    mturk = MTurkConnection(aws_access_key_id=ACCESS_ID,
-                        aws_secret_access_key=SECRET_KEY,
-                        host=host)
-
     # Create new qualification type
     qual_type = PhotoQualityQualificationType(mturk, qual, qual_name, qual_description, qual_keywords, duration, create=True)
+
+    req = Requirement(qualification_type_id=qual_type.get_type_id(),
+                    comparator="GreaterThan",
+                    integer_value=0)
+
+    qualification = Qualifications()
+    qualification.add(req)
+
+    question_form = QuestionForm()
+    ratings = [('Valid', '1'), ('Invalid','0')]
+    qc9 = QuestionContent()
+    qc9.append_field('Title', 'Picture 5:')
+    qc9.append_field('Title', 'Indicate the above image is Valid or Invalid.')
+    fta9 = SelectionAnswer(min=1, max=1, style='radiobutton',
+                selections=ratings,
+                type='text',
+                other=False)
+    q9 = Question(identifier='raw_photo4',
+                content=qc9,
+                answer_spec=AnswerSpecification(fta9),
+                is_required=True)
+
+    question_form.append(q9)
+
+    hit = mturk.create_hit(questions = question_form,
+                qualifications = qualification,
+                max_assignments = 1,
+                title = "Test image quality assessment",
+                description = "description",
+                keywords = "keywords",
+                duration = 60*10,
+                reward = 0.03)
