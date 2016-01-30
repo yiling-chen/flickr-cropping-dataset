@@ -15,31 +15,28 @@ if __name__ == '__main__':
 
     # Account data saved locally in config boto config file
     # http://code.google.com/p/boto/wiki/BotoConfig
-    mturk = MTurkConnection(
-                        #aws_access_key_id=ACCESS_ID,
-                        #aws_secret_access_key=SECRET_KEY,
-                        host=HOST)
+    mturk = MTurkConnection(host=HOST)
 
     current_quals = mturk.search_qualification_types(query="Photo")
     current_qual_names = map(lambda q: q.Name, current_quals)
-    qual_name = "Photo Qualification Test # 2"
+    qual_name = "Qualification Type for Photo Quality Assessment"
     requested_qual = current_qual_names.index(qual_name)
     qual_type = current_quals[requested_qual]
     qual_id = qual_type.QualificationTypeId
 
     req = Requirement(qualification_type_id=qual_id,
                       comparator="GreaterThan",
-                      integer_value=0)
+                      integer_value=90)
 
     # Add qualification test
     qual = Qualifications()
     qual.add(req)
 
     question_form = QuestionForm()
-    ratings = [('Valid', '1'), ('Invalid','0')]
+    ratings = [('Left', '0'), ('Right','1')]
     qc9 = QuestionContent()
-    qc9.append_field('Title', 'Picture 5:')
-    qc9.append_field('Title', 'Indicate the above image is Valid or Invalid.')
+    qc9.append_field('Title', 'Question:')
+    qc9.append_field('Title', 'Indicate which one of the following images is more beautiful.')
     fta9 = SelectionAnswer(min=1, max=1, style='radiobutton',
                 selections=ratings,
                 type='text',
@@ -53,7 +50,7 @@ if __name__ == '__main__':
 
 
     num_hit_questions = 6
-    hit_title = "Code economic political text"
+    hit_title = "Photo Quality Assessment"
     hit_description = "This task involves reading sentences from political texts and judging whether these sentences deal with a specific policy area."
     base_reward = 0.11
     lifetime = 259200

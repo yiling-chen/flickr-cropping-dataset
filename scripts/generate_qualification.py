@@ -9,16 +9,14 @@
         This is not a general purpose solution!
         The code structure is adopted from:
         https://github.com/drewconway/mturk_coder_quality/blob/master/mturk/boto/generate_qualification.py
-        However, the content of the qualification test is substantially rewritten to fit to our application.
-
-    Author: Yi-Ling Chen (yiling.chen.ntu@gmail.com)
+        However, the content of the qualification test is substantially rewritten to fit to the new application.
 """
 from boto.mturk.price import Price
 from boto.mturk.connection import MTurkConnection
 from boto.mturk.question import ExternalQuestion, QuestionContent, Question, QuestionForm
 from boto.mturk.question import Overview,AnswerSpecification,SelectionAnswer,FormattedContent
 from boto.mturk.qualification import Qualifications, Requirement
-
+import json
 
 class PhotoQualityQualificationTest(object):
     """
@@ -48,14 +46,15 @@ class PhotoQualityQualificationTest(object):
         self.title = title
 
         # Open data file
-        #f = open(fp, "r")
-        #self.__qual_sentences = json.load(f)
-        #f.close()
-        self.__qual_sentences = ""
+        f = open(fp, "r")
+        self.__qual_sentences = json.load(f)
+        #print self.__qual_sentences
+        f.close()
 
         # Set question data
-        self.num_questions = 1 #len(self.__qual_sentences)
-        self.min_correct = 1 #int(round(self.num_questions * self.percent_correct))
+        self.num_questions = len(self.__qual_sentences)
+        #print self.num_questions
+        self.min_correct = int(round(self.num_questions * self.percent_correct))
 
         # Generate sentence data
         self.__qual_test, self.__ans_key = self.__generate_qualification_test(self.__qual_sentences, self.min_correct, self.title)
@@ -65,30 +64,16 @@ class PhotoQualityQualificationTest(object):
         '''
             Returns an XML string of the answer key for a given piece of sentence data
         '''
-
         # Get answer values
-        area_ans = sentence_data["policy_area_gold"]
-        econ_ans = sentence_data["econ_scale_gold"]
-        soc_ans = sentence_data["soc_scale_gold"]
-        if econ_ans == "":
-            econ_ans = "NA"
-        if soc_ans == "":
-            soc_ans = "NA"
+        ans = sentence_data['question_'+str(question_num+1)]['Answer']
+        #print ans
 
         # Add policy area answer
-        area_key = "<Question><QuestionIdentifier>policy_area_"+str(question_num)+"</QuestionIdentifier>"
-        area_key = area_key + "<AnswerOption><SelectionIdentifier>"+str(area_ans)+"</SelectionIdentifier>"
-        area_key = area_key +"<AnswerScore>1</AnswerScore></AnswerOption></Question>"
+        ans_key = "<Question><QuestionIdentifier>photo_pair_"+str(question_num)+"</QuestionIdentifier>"
+        ans_key = ans_key + "<AnswerOption><SelectionIdentifier>"+str(ans)+"</SelectionIdentifier>"
+        ans_key = ans_key +"<AnswerScore>1</AnswerScore></AnswerOption></Question>"
 
-        econ_key = "<Question><QuestionIdentifier>econ_scale_"+str(question_num)+"</QuestionIdentifier>"
-        econ_key = econ_key + "<AnswerOption><SelectionIdentifier>"+str(econ_ans)+"</SelectionIdentifier>"
-        econ_key = econ_key + "<AnswerScore>0</AnswerScore></AnswerOption></Question>"
-
-        soc_key = "<Question><QuestionIdentifier>soc_scale_"+str(question_num)+"</QuestionIdentifier>"
-        soc_key = soc_key + "<AnswerOption><SelectionIdentifier>"+str(soc_ans)+"</SelectionIdentifier>"
-        soc_key = soc_key + "<AnswerScore>0</AnswerScore></AnswerOption></Question>"
-
-        return area_key + econ_key + soc_key
+        return ans_key
 
     '''
         Generate the XML string that represents a AnswerKey data structure specifying answers for a Qualification test,
@@ -97,7 +82,7 @@ class PhotoQualityQualificationTest(object):
         http://docs.aws.amazon.com/AWSMechTurk/latest/AWSMturkAPI/ApiReference_AnswerKeyDataStructureArticle.html
     '''
     def __generate_answer_key(self, answers, num_correct, num_sentences):
-        '''
+
         answer_key = '<?xml version="1.0" encoding="UTF-8"?>'
         answer_key = answer_key + '<AnswerKey xmlns="http://mechanicalturk.amazonaws.com/AWSMechanicalTurkDataSchemas/2005-10-01/AnswerKey.xsd">'
         for a in answers:
@@ -105,153 +90,79 @@ class PhotoQualityQualificationTest(object):
 
         # Add the qualification value mapping to the answer key
         min_bound = num_correct
+        print min_bound
         max_bound = num_sentences
+        print max_bound
 
         # Add map
+        '''
         value_map = "<QualificationValueMapping><RangeMapping><SummedScoreRange>"
         value_map = value_map + "<InclusiveLowerBound>"+str(min_bound)+"</InclusiveLowerBound><InclusiveUpperBound>"+str(max_bound)+"</InclusiveUpperBound>"
         value_map = value_map + "<QualificationValue>1</QualificationValue></SummedScoreRange>"
-        value_map = value_map + "<OutOfRangeQualificationValue>0</OutOfRangeQualificationValue>"
+        value_map = value_map + "<OutOfRangeQualificationValue>5</OutOfRangeQualificationValue>"
         value_map = value_map + "</RangeMapping></QualificationValueMapping>"
-
-        answer_key = answer_key + value_map +"</AnswerKey>"
         '''
-
-        answer_key = '<?xml version="1.0" encoding="UTF-8"?>'
-        answer_key = answer_key + '<AnswerKey xmlns="http://mechanicalturk.amazonaws.com/AWSMechanicalTurkDataSchemas/2005-10-01/AnswerKey.xsd">'
-
-        question_key = "<Question><QuestionIdentifier>raw_photo</QuestionIdentifier>"
-        question_key = question_key + "<AnswerOption><SelectionIdentifier>0</SelectionIdentifier>"
-        question_key = question_key + "<AnswerScore>100</AnswerScore></AnswerOption></Question>"
-
-        answer_key = answer_key + question_key
-
-        # Add map
-        value_map = "<QualificationValueMapping><RangeMapping><SummedScoreRange>"
-        value_map = value_map + "<InclusiveLowerBound>0</InclusiveLowerBound><InclusiveUpperBound>100</InclusiveUpperBound>"
-        value_map = value_map + "<QualificationValue>50</QualificationValue></SummedScoreRange>"
-        value_map = value_map + "<OutOfRangeQualificationValue>0</OutOfRangeQualificationValue>"
-        value_map = value_map + "</RangeMapping></QualificationValueMapping>"
+        value_map = "<QualificationValueMapping><PercentageMapping>"
+        value_map = value_map + "<MaximumSummedScore>10</MaximumSummedScore>"
+        value_map = value_map + "</PercentageMapping></QualificationValueMapping>"
 
         answer_key = answer_key + value_map +"</AnswerKey>"
 
         return answer_key
 
-
     def __generate_qualification_question(self, sentence_data, question_num):
         '''
             Returns a sentence coding qualification test, with answer key
         '''
+        #print type(sentence_data)
+        url_left = sentence_data['question_'+str(question_num+1)]['URL_left']
+        url_right = sentence_data['question_'+str(question_num+1)]['URL_right']
 
-        # # Coding scale data
-        econ_scale = [('', 'NA'),
-                      ('Very left','-2'),
-                      ('Somewhat left','-1'),
-                      ('Neither left nor right','0'),
-                      ('Somewhat right','1'),
-                      ('Very right','2')]
-
-        soc_scale = [('', 'NA'),
-                     ('Very liberal','2'),
-                     ('Somewhat liberal','-1'),
-                     ('Neither liberal nor conservative','0'),
-                     ('Somewhat conservative','1'),
-                     ('Very conservative','2')]
-
-        policy_area = [('Select policy area', '0'),
-                       ('Not Economic or Social','1'),
-                       ('Economic','2'),
-                       ('Social','3')]
-
-        # Generate the question text externally.
-        tuid = sentence_data["text_unit_id"]
-        q_url = "http://s3.amazonaws.com/aws.drewconway.com/mt/experiments/cmp/html/formatted_sentence.html?text_unit_id="
-        q_url_formatted = q_url + str(tuid) + "&amp;question_num=" + str(question_num)
-
-        # Create policy area question and answer fields
-        content_sentence = QuestionContent()
-        content_sentence.append_field("Title", "#" + str(question_num+1))
-        content_sentence.append(FormattedContent('<iframe src="'+q_url_formatted+'" frameborder="0" width="1280" height="180" scrolling="auto">This text is necessary to ensure proper XML validation</iframe>'))
-        ans_policy_area = SelectionAnswer(min=1, max=1, style="dropdown", selections=policy_area)
-        qst_policy_area = Question(identifier = "policy_area_"+str(question_num),
-                                  content=content_sentence,
-                                  answer_spec=AnswerSpecification(ans_policy_area),
-                                  is_required=True)
-
-        # Create 'Economic' policy scale question and answer fields
-        content_econ_policy = QuestionContent()
-        content_econ_policy.append_field("Text", "If you selected 'Not Economic or Social' the task is complete. Either move to the next sentence, or submit your answers.")
-        content_econ_policy.append_field("Text", "If you selected 'Economic', now select economic policy scale below.  Otherwise, do not make a selection.")
-        ans_econ_scale = SelectionAnswer(min=1, max=1, style="dropdown", selections=econ_scale)
-        qst_econ_policy = Question(identifier = "econ_scale_"+str(question_num),
-                                   content = content_econ_policy,
-                                   answer_spec = AnswerSpecification(ans_econ_scale),
-                                   is_required=True)
-
-        # Create 'Social' policy scale question and answer fields
-        content_soc_policy = QuestionContent()
-        content_soc_policy.append_field("Text", "If you selected 'Social', now select the social policy scale below.  Otherwise, do not make a selection.")
-        ans_soc_scale = SelectionAnswer(min=1, max=1, style="dropdown", selections=soc_scale)
-        qst_soc_policy = Question(identifier = "soc_scale_"+str(question_num),
-                                  content = content_soc_policy,
-                                  answer_spec = AnswerSpecification(ans_soc_scale),
-                                  is_required=True)
+        options = [('Left', '0'), ('Right','1')]
+        question_content = QuestionContent()
+        question_content.append_field('Title', 'Indicate which one of the following images is better in terms of composition.')
+        question_content.append(FormattedContent('Left:<img src="'+url_left+'" alt="Left picture"></img>Right:<img src="'+url_right+'" alt="Right picutre"></img>'))
+        answer_selection = SelectionAnswer(min=1, max=1, style='radiobutton', selections=options, type='text', other=False)
+        question = Question(identifier='photo_pair_'+str(question_num),
+                            content=question_content,
+                            answer_spec=AnswerSpecification(answer_selection),
+                            is_required=True)
 
         # Glue everything together in a dictionary, keyed by the question_num
         return {"question_num" : question_num,
-                "policy_area_"+str(question_num) : qst_policy_area,
-                "econ_scale_"+str(question_num) : qst_econ_policy,
-                "soc_scale_"+str(question_num) : qst_soc_policy,
+                "question_"+str(question_num) : question,
                 "answer_key_"+str(question_num) : self.__generate_answer_form(sentence_data, question_num)}
 
 
     def __generate_qualification_test(self, question_data, num_correct, title):
         '''
-            Returns a QuestionForm and AnswerKey for a qualification test from a list of sentence dictionaries
+            Returns a QuestionForm and AnswerKey for a qualification test from a list of sentence dictionaries.
+                question_data : json object containing all the questions.
         '''
 
         # Get question and answer data
-        #questions = map(lambda (i,x): self.__generate_qualification_question(x,i), enumerate(question_data))
-        #answers = map(lambda (i,x): x["answer_key_"+str(i)], enumerate(questions))
-        answers = None
+        questions = map(lambda (i,x): self.__generate_qualification_question(x,i), enumerate(question_data))
+        answers = map(lambda (i,x): x["answer_key_"+str(i)], enumerate(questions))
+        #print questions
+        #print answers
+
         answer_key = self.__generate_answer_key(answers, num_correct, len(question_data))
 
         # Create form setup
         qual_overview = Overview()
-        qual_overview.append_field("Title",title)
+        qual_overview.append_field("Title", title)
 
         # Instructions
         qual_overview.append(FormattedContent("<h1>You must correctly answer all the questions below.</h1>"))
         qual_overview.append(FormattedContent("<h2>Coding instructions are listed below. Please read through these carefully before continuing on to the coding task.</h2>"))
-        inst_url = "https://dl.dropboxusercontent.com/u/43220533/web/criteria.html"
-        qual_overview.append(FormattedContent('<iframe src="'+inst_url+'" frameborder="0" width="1280" height="300" scrolling="auto">This text is necessary to ensure proper XML validation</iframe>'))
 
         # Create question form and append contents
         qual_form = QuestionForm()
         qual_form.append(qual_overview)
 
-        ratings = [('Left', '1'), ('Right','0')]
-
-        qc = QuestionContent()
-        qc.append_field('Title', 'Indicate which one of the above images is better in terms of composition.')
-        fta1 = SelectionAnswer(min=1, max=1, style='radiobutton',
-                        selections=ratings,
-                        type='text',
-                        other=False)
-        q = Question(identifier='raw_photo',
-                content=qc,
-                answer_spec=AnswerSpecification(fta1),
-                is_required=True)
-
-        '''
         for q in questions:
             i = q["question_num"]
-            qual_form.append(q["policy_area_"+str(i)])
-            qual_form.append(q["econ_scale_"+str(i)])
-            qual_form.append(q["soc_scale_"+str(i)])
-        '''
-
-        qual_form.append(q)
+            qual_form.append(q["question_"+str(i)])
 
         return (qual_form, answer_key)
 
@@ -318,18 +229,19 @@ if __name__ == '__main__':
     title = "Qualification test for photo quality assessment."
 
     # Create qualification test object
-    qual = PhotoQualityQualificationTest("training/", 0.9, title)
+    qual = PhotoQualityQualificationTest("./qual_question.json", 0.9, title)
 
     # Qualification Type info
     # qual_name = "Coder Qualification Test "+datetime.now().strftime("%s")
-    qual_name = "Photo Qualification Test # 2"
-    qual_description = "A qualification test in which you are given pairs of photos and asked to pick the relatively beautiful one."
+    qual_name = "Qualification Type for Photo Quality Assessment"
+    qual_description = "A qualification test in which you are given pairs of photos and asked to pick the more beautiful one."
     qual_keywords = ["photo","quality","ranking"]
-    duration = 30*60
+    duration = 30 * 60
 
     # Create new qualification type
     qual_type = PhotoQualityQualificationType(mturk, qual, qual_name, qual_description, qual_keywords, duration, create=True)
 
+    '''
     req = Requirement(qualification_type_id=qual_type.get_type_id(),
                     comparator="GreaterThan",
                     integer_value=0)
@@ -360,4 +272,5 @@ if __name__ == '__main__':
                 description = "description",
                 keywords = "keywords",
                 duration = 60*10,
-                reward = 0.03)
+                reward = 0.03)\
+    '''
