@@ -232,7 +232,6 @@ if __name__ == '__main__':
     qual = PhotoQualityQualificationTest("./qual_question.json", 0.9, title)
 
     # Qualification Type info
-    # qual_name = "Coder Qualification Test "+datetime.now().strftime("%s")
     qual_name = "Qualification Type for Photo Quality Assessment"
     qual_description = "A qualification test in which you are given pairs of photos and asked to pick the more beautiful one."
     qual_keywords = ["photo","quality","ranking"]
@@ -241,36 +240,3 @@ if __name__ == '__main__':
     # Create new qualification type
     qual_type = PhotoQualityQualificationType(mturk, qual, qual_name, qual_description, qual_keywords, duration, create=True)
 
-    '''
-    req = Requirement(qualification_type_id=qual_type.get_type_id(),
-                    comparator="GreaterThan",
-                    integer_value=0)
-
-    qualification = Qualifications()
-    qualification.add(req)
-
-    question_form = QuestionForm()
-    ratings = [('Valid', '1'), ('Invalid','0')]
-    qc9 = QuestionContent()
-    qc9.append_field('Title', 'Picture 5:')
-    qc9.append_field('Title', 'Indicate the above image is Valid or Invalid.')
-    fta9 = SelectionAnswer(min=1, max=1, style='radiobutton',
-                selections=ratings,
-                type='text',
-                other=False)
-    q9 = Question(identifier='raw_photo4',
-                content=qc9,
-                answer_spec=AnswerSpecification(fta9),
-                is_required=True)
-
-    question_form.append(q9)
-
-    hit = mturk.create_hit(questions = question_form,
-                qualifications = qualification,
-                max_assignments = 1,
-                title = "Test image quality assessment",
-                description = "description",
-                keywords = "keywords",
-                duration = 60*10,
-                reward = 0.03)\
-    '''
