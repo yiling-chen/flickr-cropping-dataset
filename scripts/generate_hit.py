@@ -29,6 +29,7 @@ from boto.mturk.connection import MTurkConnection
 from boto.mturk.qualification import Qualifications, Requirement
 from boto.mturk.question import Question,QuestionForm,QuestionContent,SelectionAnswer,AnswerSpecification
 from generate_qualification import PhotoQualityQualificationTest,PhotoQualityQualificationType
+from clint.textui import puts, colored
 from datetime import datetime
 import argparse
 
@@ -82,12 +83,14 @@ if __name__ == '__main__':
     current_quals = mturk.search_qualification_types(query="Photo")
     current_qual_names = map(lambda q: q.Name, current_quals)
     if qual_name not in current_qual_names:
+        puts(colored.yellow('Creating new qualification type...'))
         qual_test = PhotoQualityQualificationTest("./qual_question.json", 0.9, qual_test_title)
 
         # Create new qualification type
-        qual_type = CoderQualityQualificationType(mturk, qual_test, qual_name, qual_description, qual_keywords, duration, create=True)
+        qual_type = PhotoQualityQualificationType(mturk, qual_test, qual_name, qual_description, qual_keywords, duration, create=True)
         qual_id = qual_type.get_type_id()
     else:
+        puts(colored.green('Using existing qualification type...'))
         requested_qual = current_qual_names.index(qual_name)
         qual_type = current_quals[requested_qual]
         qual_id = qual_type.QualificationTypeId
@@ -95,7 +98,7 @@ if __name__ == '__main__':
     # Register test as a requirement for hit
     req = Requirement(qualification_type_id=qual_id,
                       comparator="GreaterThan",
-                      integer_value=0)
+                      integer_value=80)
 
     # Add qualification test
     qual = Qualifications()
@@ -130,6 +133,7 @@ if __name__ == '__main__':
 
     # Create HITs
     for j in xrange(num_hits):
+        print 'Pushing ', j, ' HIT...'
         hit_res = mturk.create_hit(title=hit_title,
                     description=hit_description,
                     reward=reward,

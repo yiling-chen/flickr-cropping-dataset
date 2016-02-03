@@ -16,7 +16,8 @@ from boto.mturk.connection import MTurkConnection
 from boto.mturk.question import ExternalQuestion, QuestionContent, Question, QuestionForm
 from boto.mturk.question import Overview,AnswerSpecification,SelectionAnswer,FormattedContent
 from boto.mturk.qualification import Qualifications, Requirement
-import json
+import json, urllib, cStringIO
+from PIL import Image
 
 class PhotoQualityQualificationTest(object):
     """
@@ -90,9 +91,7 @@ class PhotoQualityQualificationTest(object):
 
         # Add the qualification value mapping to the answer key
         min_bound = num_correct
-        print min_bound
         max_bound = num_sentences
-        print max_bound
 
         # Add map
         '''
@@ -114,14 +113,31 @@ class PhotoQualityQualificationTest(object):
         '''
             Returns a sentence coding qualification test, with answer key
         '''
-        #print type(sentence_data)
         url_left = sentence_data['question_'+str(question_num+1)]['URL_left']
         url_right = sentence_data['question_'+str(question_num+1)]['URL_right']
+
+        # retrieve picture to examine its resolution
+
+        file_left = cStringIO.StringIO(urllib.urlopen(url_left).read())
+        img_left = Image.open(file_left)
+        left_height = img_left.height
+        if left_height > 400:
+            left_height = 400
+
+        file_right = cStringIO.StringIO(urllib.urlopen(url_right).read())
+        img_right = Image.open(file_right)
+        right_height = img_right.height
+        if right_height > 400:
+            right_height = 400
+
 
         options = [('Left', '0'), ('Right','1')]
         question_content = QuestionContent()
         question_content.append_field('Title', 'Indicate which one of the following images is better in terms of composition.')
-        question_content.append(FormattedContent('Left:<img src="'+url_left+'" alt="Left picture"></img>Right:<img src="'+url_right+'" alt="Right picutre"></img>'))
+        question_content.append(FormattedContent('Left:<img src="' + url_left + '" height="' + str(left_height) +
+            '" alt="Left picture"></img>Right:<img src="' + url_right + '" height="' + str(right_height) + '" alt="Right picutre"></img>'))
+        #question_content.append(FormattedContent('Left:<img src="'+url_left+'" height=400 alt="Left picture"></img>Right:<img src="'+url_right+'" height=400 alt="Right picutre"></img>'))
+        #question_content.append(FormattedContent('Left:<img src="'+url_left+'" alt="Left picture"></img>Right:<img src="'+url_right+'" alt="Right picutre"></img>'))
         answer_selection = SelectionAnswer(min=1, max=1, style='radiobutton', selections=options, type='text', other=False)
         question = Question(identifier='photo_pair_'+str(question_num),
                             content=question_content,
@@ -143,8 +159,6 @@ class PhotoQualityQualificationTest(object):
         # Get question and answer data
         questions = map(lambda (i,x): self.__generate_qualification_question(x,i), enumerate(question_data))
         answers = map(lambda (i,x): x["answer_key_"+str(i)], enumerate(questions))
-        #print questions
-        #print answers
 
         answer_key = self.__generate_answer_key(answers, num_correct, len(question_data))
 
@@ -229,7 +243,7 @@ if __name__ == '__main__':
     title = "Qualification test for photo quality assessment."
 
     # Create qualification test object
-    qual = PhotoQualityQualificationTest("./qual_question.json", 0.9, title)
+    qual = PhotoQualityQualificationTest("./qual_question.json", 0.8, title)
 
     # Qualification Type info
     qual_name = "Qualification Type for Photo Quality Assessment"
