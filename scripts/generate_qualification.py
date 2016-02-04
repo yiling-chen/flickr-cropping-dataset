@@ -117,7 +117,6 @@ class PhotoQualityQualificationTest(object):
         url_right = sentence_data['question_'+str(question_num+1)]['URL_right']
 
         # retrieve picture to examine its resolution
-
         file_left = cStringIO.StringIO(urllib.urlopen(url_left).read())
         img_left = Image.open(file_left)
         left_height = img_left.height
@@ -130,14 +129,11 @@ class PhotoQualityQualificationTest(object):
         if right_height > 400:
             right_height = 400
 
-
         options = [('Left', '0'), ('Right','1')]
         question_content = QuestionContent()
         question_content.append_field('Title', 'Indicate which one of the following images is better in terms of composition.')
-        question_content.append(FormattedContent('Left:<img src="' + url_left + '" height="' + str(left_height) +
-            '" alt="Left picture"></img>Right:<img src="' + url_right + '" height="' + str(right_height) + '" alt="Right picutre"></img>'))
-        #question_content.append(FormattedContent('Left:<img src="'+url_left+'" height=400 alt="Left picture"></img>Right:<img src="'+url_right+'" height=400 alt="Right picutre"></img>'))
-        #question_content.append(FormattedContent('Left:<img src="'+url_left+'" alt="Left picture"></img>Right:<img src="'+url_right+'" alt="Right picutre"></img>'))
+        question_content.append(FormattedContent('Left:&nbsp;<img src="' + url_left + '" height="' + str(left_height) +
+            '" alt="Left picture"></img>Right:&nbsp;<img src="' + url_right + '" height="' + str(right_height) + '" alt="Right picutre"></img>'))
         answer_selection = SelectionAnswer(min=1, max=1, style='radiobutton', selections=options, type='text', other=False)
         question = Question(identifier='photo_pair_'+str(question_num),
                             content=question_content,
@@ -167,8 +163,11 @@ class PhotoQualityQualificationTest(object):
         qual_overview.append_field("Title", title)
 
         # Instructions
-        qual_overview.append(FormattedContent("<h1>You must correctly answer all the questions below.</h1>"))
-        qual_overview.append(FormattedContent("<h2>Coding instructions are listed below. Please read through these carefully before continuing on to the coding task.</h2>"))
+        qual_overview.append(FormattedContent("<h1>Please answer all the questions below.</h1>"))
+        qual_overview.append(FormattedContent("<h2>For each question, please choose either the left or right image \
+            which you think is more beautiful in terms of its composition. Hints: Please make your decision based on\
+            several 'rules of thumb' in photography, such as rule of thirds, visual balance and golden ratio. \
+            You may also make your decision by judging which image contains less unimportant or distracting contents.</h2>"))
 
         # Create question form and append contents
         qual_form = QuestionForm()
