@@ -8,9 +8,9 @@ Description:    A command-line interface for generating HITs to MTurk.
                 $ python generate_hit.py -h
                 usage: generate_hit.py [-h] [--hits N] [--assign N] [--prod {y,n}]
                        [--access ACCESS] [--secret SECRET]
-                This script will push a new experiment to MTurk. Several users defined
+                This script will push new photo ranking tasks to MTurk. Several user-defined
                 arguments are required.
-                optional arguments:
+                Optional arguments:
                   -h, --help        show this help message and exit
                   --hits N          The number of HITs to push of this type. Default is 50.
                   --assign N        The number of assignments for each HIT. Default is 30.
@@ -21,10 +21,9 @@ Description:    A command-line interface for generating HITs to MTurk.
                   --secret SECRET   Your AWS secret access key. Will look for boto
                                     configuration file if nothing is provided
 
-Created by  (yiling.chen.ntu@gmail.com) on
-# Copyright (c) , under the Simplified BSD License.
-# For more information on FreeBSD see: http://www.opensource.org/licenses/bsd-license.php
-# All rights reserved.
+    The code structure is partially adopted from:
+    https://github.com/drewconway/mturk_coder_quality/blob/master/mturk/boto/generate_hit.py
+    but substantially rewritten to fit to the new application.
 """
 from boto.mturk.price import Price
 from boto.mturk.connection import MTurkConnection
@@ -40,11 +39,10 @@ def create_hit(mturk, URLs, num_assignment, qualification=Qualifications()):
     # Constant data for HIT generation
     hit_title = "Photo Quality Assessment"
     hit_description = "This task involves viewing pairs of pictures and judging which picture among the image pair is more beautiful."
-    #base_reward = 0.05
     lifetime = 259200
     keywords = ["photo","quality","ranking"]
     duration = 30 * 60
-    reward = 0.03
+    reward = 0.05
     #approval_delay = 86400
 
     # Question form for the HIT
@@ -55,6 +53,7 @@ def create_hit(mturk, URLs, num_assignment, qualification=Qualifications()):
     overview.append(FormattedContent('For each question, please choose either the left or right image which you think is more beautiful in terms of its <u>composition</u>.'))
     overview.append(FormattedContent('<b>Hints: Please make your decision based on several "rules of thumb" in photography, such as rule of thirds, visual balance and golden ratio.</b>'))
     overview.append(FormattedContent('<b>You may also make your decision by judging which image contains less unimportant or distracting contents</b>.'))
+    overview.append(FormattedContent('For those hard cases, please just select your preferred image based on your sense of aesthetics.'))
     question_form.append(overview)
 
     ratings = [('Left', '0'), ('Right','1')]
@@ -87,8 +86,8 @@ def create_hit(mturk, URLs, num_assignment, qualification=Qualifications()):
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description='Command line interface for generating HITs to MTurk.')
-    parser.add_argument('--hits', metavar='N', type=int, default=5, help="The number of HITs to push. Default is 10.")
-    parser.add_argument('--assign', metavar='N', type=int, default=1, help="The number of assignments for each HIT. Default is 7.")
+    parser.add_argument('--hits', metavar='N', type=int, default=2, help="The number of HITs to push. Default is 10.")
+    parser.add_argument('--assign', metavar='N', type=int, default=7, help="The number of assignments for each HIT. Default is 7.")
     parser.add_argument("--prod", type=str, choices="yn", default="n",
         help="Should this HIT be pushed to the production server? Default is 'n'.")
 
@@ -121,12 +120,10 @@ if __name__ == '__main__':
         # http://code.google.com/p/boto/wiki/BotoConfig
         mturk = MTurkConnection(host=host)
 
-    hit_results = []
-
     #------  Create qualification type  -------
     qual_test_title = "Qualification test for photo quality assessment."
     qual_name = "Qualification Type for Photo Quality Assessment"
-    qual_description = "A qualification test in which you are given pairs of photos and asked to pick the more beautiful one."
+    qual_description = "A qualification test in which you are given 10 pairs of photos and asked to pick the more beautiful one."
     qual_keywords = ["photo","quality","ranking"]
     duration = 30 * 60
 
@@ -136,7 +133,7 @@ if __name__ == '__main__':
     current_qual_names = map(lambda q: q.Name, current_quals)
     if qual_name not in current_qual_names:
         puts(colored.yellow('Creating new qualification type...'))
-        qual_test = PhotoQualityQualificationTest("./qual_question.json", 0.9, qual_test_title)
+        qual_test = PhotoQualityQualificationTest("./qual_question.json", 0.7, qual_test_title)
 
         # Create new qualification type
         qual_type = PhotoQualityQualificationType(mturk, qual_test, qual_name, qual_description, qual_keywords, duration, create=True)
@@ -150,13 +147,13 @@ if __name__ == '__main__':
     # Register test as a requirement for hit
     req = Requirement(qualification_type_id=qual_id,
                       comparator="GreaterThan",
-                      integer_value=90)
+                      integer_value=70)
 
     # Add qualification test
     qual = Qualifications()
     qual.add(req)
 
-    num_images_per_hit = 2
+    num_images_per_hit = 10
     mturk_crop_db = pickle.load( open('../mturk_crop_db.pkl', 'rb') )
 
     indexes = []
@@ -184,5 +181,6 @@ if __name__ == '__main__':
         for idx in xrange(len(image_indexes)):
             mturk_crop_db[image_indexes[idx]]['hit_id'] = HITId
             mturk_crop_db[image_indexes[idx]]['question_idx'] = idx
+            mturk_crop_db[image_indexes[idx]]['num_assignment'] += num_assignment
 
     pickle.dump( mturk_crop_db, open('../mturk_crop_db.pkl', 'wb') )
