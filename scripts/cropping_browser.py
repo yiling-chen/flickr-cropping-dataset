@@ -27,7 +27,7 @@ def browse(database):
         cv2.imshow('Cropping', img)
         key = cv2.waitKey()
 
-        if key == 27:
+        if key == 1048603:
             print 'exit'
             break
 

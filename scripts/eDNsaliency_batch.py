@@ -23,9 +23,9 @@ Description:    A script for processing a batch of images to generate the corres
                                    requires fixation map
                 --no-blur          Do not blur the final saliency map (default: False)
                 --src-dir=SRCDIR   source directory of images to be batch processed
-                                   (default: ../images/)
+                                   (e.g., ../images/)
                 --dst-dir=DSTDIR   destination directory for storing the computed saliency
-                                   maps (default: ../eDN/)
+                                   maps (e.g., ../eDN/)
 
     This scirpt is partially adopted from:
     https://github.com/coxlab/edn-cvpr2014/blob/master/eDNsaliency
@@ -200,33 +200,16 @@ def get_optparser():
         help="Do not blur the final saliency map (default: False)")
     parser.add_option("--src-dir",
         dest="srcDir",
-        default="/home/robin/Development/flickr-cropping-dataset/data/",
-        help="source directory of images to be batch processed (default: ../images/)")
+        default="~/flickr-cropping-dataset/data/",
+        help="source directory of images to be batch processed (e.g., ../images/)")
     parser.add_option("--dst-dir",
         dest="dstDir",
-        default="/home/robin/Development/flickr-cropping-dataset/eDN/",
-        help="destination directory for storing the computed saliency maps (default: ../eDN/)")
+        default="~/flickr-cropping-dataset/eDN/",
+        help="destination directory for storing the computed saliency maps (e.g., ../eDN/)")
 
     return parser
 
 def main():
-    '''
-    logging.basicConfig(level=logging.INFO, format='%(message)s')
-    parser = get_optparser()
-    opts, args = parser.parse_args()
-
-    if len(args)<1 or len(args)>2 or (opts.histeq and not opts.fixMap):
-        parser.print_help()
-    else:
-        imgPath = args[0]
-        if len(args) == 2:
-            outPath = args[1]
-        else:
-            outPath = "salMap.jpg"
-        eDNsaliency(imgPath, outPath, opts)
-
-    '''
-
     logging.basicConfig(level=logging.INFO, format='%(message)s')
     parser = get_optparser()
     opts, args = parser.parse_args()
