@@ -40,10 +40,8 @@ if __name__ == '__main__':
         print 'Creating folder to download images...[{}]'.format(image_folder)
         os.makedirs(image_folder)
 
-    train_json_data = open('../cropping_training_set.json', 'r').read()
-    data = json.loads(train_json_data)
-    test_json_data = open('../cropping_testing_set.json', 'r').read()
-    data.extend(json.loads(test_json_data))
+    json_data = open('../ranking_annotation.json', 'r').read()
+    data = json.loads(json_data)
     URLs = [data[i]['url'] for i in xrange(len(data))]
 
     print('Downloading {} images with {} workers...'.format(len(data), num_workers))
