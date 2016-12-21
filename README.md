@@ -33,4 +33,4 @@ MIT License
 
 
 ## Questions?
-If you have questions/suggestions, please feel free to [email](mailto:yiling.chen.ntu@gmail.com) the author.
+If you have questions/suggestions, please feel free to send an email to (yiling dot chen dot ntu at gmail dot com).
