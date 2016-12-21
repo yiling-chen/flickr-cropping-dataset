@@ -1,6 +1,6 @@
-title: Flickr-cropping-dataset
-description: Dataset that contains photos crawled from Flickr and annotations that indicates a local window representing a good composition.
-google_analytics: 
+title: Quantitative Analysis of Automatic Image Cropping Algorithms
+description: A data set and comparative study.
+google_analytics:
 show_downloads: true
 theme: jekyll-theme-cayman
 
