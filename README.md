@@ -2,7 +2,7 @@
 
 This repository contains the dataset used in the following paper:
 
-[Yi-Ling Chen](http://www.cmlab.csie.ntu.edu.tw/~yiling/), Tzu-Wei Huang, Kai-Han Chang, Yu-Chen Tsai, [Hwann-Tzong Chen](http://www.cs.nthu.edu.tw/~htchen/), [Bing-Yu Chen](http://graphics.csie.ntu.edu.tw/~robin/). (2017). ["Quantitative Analysis of Automatic Image Cropping Algorithms:A Dataset and Comparative Study"](http://arxiv.org/abs/1612.00005v1). IEEE Winter Conference on Applications of Computer Vision (WACV) 2017.
+[Yi-Ling Chen](http://www.cmlab.csie.ntu.edu.tw/~yiling/), Tzu-Wei Huang, Kai-Han Chang, Yu-Chen Tsai, [Hwann-Tzong Chen](http://www.cs.nthu.edu.tw/~htchen/), [Bing-Yu Chen](http://graphics.csie.ntu.edu.tw/~robin/). (2017). ["Quantitative Analysis of Automatic Image Cropping Algorithms:A Dataset and Comparative Study"](). IEEE Winter Conference on Applications of Computer Vision (WACV) 2017.
 
 **If you use this dataset in an academic paper, please consider to cite:**
 
@@ -18,7 +18,7 @@ For more information regarding the paper, please visit https://yiling-chen.githu
 ## Download the dataset
 
 1. Clone the repository to your local disk.
-2. Under a command line termincal, run the following commands to get the images with cropping annotations:
+2. Under a command line terminal, run the following commands to get the images with cropping annotations:
 ```bash
 $ cd scripts/
 $ python download_images.py -w 4
