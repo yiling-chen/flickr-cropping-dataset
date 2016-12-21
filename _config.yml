@@ -1,7 +1,7 @@
-title: Quantitative Analysis of Automatic Image Cropping Algorithms
-description: A data set and comparative study.
+title: Flickr Cropping Dataset
+description: Quantitative Analysis of Automatic Image Cropping Algorithms: A data set and comparative study.
 google_analytics:
-show_downloads: true
+show_downloads: false
 theme: jekyll-theme-cayman
 
 gems:
