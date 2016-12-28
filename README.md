@@ -44,7 +44,6 @@ $ python download_ranking_images -w 4
             399
         ]
     },
-    ...
 ]
 ```
 
@@ -71,11 +70,9 @@ $ python download_ranking_images -w 4
                     400
                 ]
             },
-            ...
         ],
         "flickr_photo_id":15251367120
     },
-    ...
 ]
 ```
 
