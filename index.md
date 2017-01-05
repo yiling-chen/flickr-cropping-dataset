@@ -4,8 +4,10 @@ Automatic photo cropping is an important tool for improving visual quality of di
 
 ### Dataset
 
-![Example images](images/dataset.jpg)
 The final dataset is composed of 3,413 images on Flickr with Creative Commons License.
+
+![Example images](images/dataset.jpg)
+
 
 > **Note:** Run `scripts/download_ranking_images` to automatically download the images from Flickr.
 
@@ -59,7 +61,10 @@ There are two types of annotations in this dataset: **cropping** and **ranking**
 
 ### Results
 
-The following figures demonstrates several examples of comparing the ground truth and the best crop windows determined by various methods.
+With the cropping annotations as ground truth, we implemented several baseline algorithms and evaluated the performance of cropping accuracy.
+The following figure demonstrates several examples of comparing the ground truth and the best crop windows determined by various methods.
+For more quantitative analysis and performance comparison, please refer to the paper.
+
 ![Comparison with previous methods](images/results.jpg)
 
 ### Paper
