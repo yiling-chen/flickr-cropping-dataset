@@ -9,7 +9,7 @@ The final dataset is composed of 3,413 images on Flickr with Creative Commons Li
 ![Example images](images/dataset.jpg)
 
 
-> **Note:** Run `scripts/download_ranking_images` to automatically download the images from Flickr.
+> **Note:** Run `scripts/download_ranking_images` to automatically download the images from Flickr website.
 
 There are two types of annotations in this dataset: **cropping** and **ranking**.
 
@@ -63,11 +63,13 @@ There are two types of annotations in this dataset: **cropping** and **ranking**
 
 With the cropping annotations as ground truth, we implemented several baseline algorithms and evaluated the performance of cropping accuracy.
 The following figure demonstrates several examples of comparing the ground truth and the best crop windows determined by various methods.
-For more quantitative analysis and performance comparison, please refer to the paper.
+For more quantitative analysis and performance comparison, please refer to our [paper](#paper).
 
 ![Comparison with previous methods](images/results.jpg)
 
-### Paper
+### Paper <a name="paper"></a>
+
+This work is going to be published in IEEE Winter Conference on Applications of Computer Vision (WACV) 2017. You can find a preprint version on [arXiv]().
 
 **If you use this dataset in an academic paper, please consider to cite:**
 
