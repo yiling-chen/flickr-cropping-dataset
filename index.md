@@ -4,13 +4,14 @@ Automatic photo cropping is an important tool for improving visual quality of di
 
 ### Dataset
 
+![Example images](images/dataset.jpg)
 The final dataset is composed of 3,413 images on Flickr with Creative Commons License.
 
 > **Note:** Run `scripts/download_ranking_images` to automatically download the images from Flickr.
 
 There are two types of annotations in this dataset: **cropping** and **ranking**.
 
-1. Cropping: `cropping_training_set.json` and `cropping_testing_set.json` contain the cropping annotations of this dataset. The annotations are saved as an array of JSON dictionaries. Each dictionary includes the information of one image. See the following for an example.
+* Cropping: `cropping_training_set.json` and `cropping_testing_set.json` contain the cropping annotations of this dataset. The annotations are saved as an array of JSON dictionaries. Each dictionary includes the information of one image. See the following for an example.
 
 ```json
 [
@@ -27,7 +28,7 @@ There are two types of annotations in this dataset: **cropping** and **ranking**
 ]
 ```
 
-2. Ranking: `ranking_annotation.json` contain the ranking annotations of this dataset. The annotations are saved as an array of JSON dictionaries. Each dictionary includes the information of one image. Each image contains ten crop pairs. The crop with more votes is more visually pleasing than the other one. See the following for an example.
+* Ranking: `ranking_annotation.json` contain the ranking annotations of this dataset. The annotations are saved as an array of JSON dictionaries. Each dictionary includes the information of one image. Each image contains ten crop pairs. The crop with more votes is more visually pleasing than the other one. See the following for an example.
 
 ```json
 [
