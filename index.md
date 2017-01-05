@@ -11,6 +11,7 @@ The final dataset is composed of 3,413 images on Flickr with Creative Commons Li
 There are two types of annotations in this dataset: **cropping** and **ranking**.
 
 1. Cropping: `cropping_training_set.json` and `cropping_testing_set.json` contain the cropping annotations of this dataset. The annotations are saved as an array of JSON dictionaries. Each dictionary includes the information of one image. See the following for an example.
+
 ```json
 [
     {
@@ -25,7 +26,9 @@ There are two types of annotations in this dataset: **cropping** and **ranking**
     },
 ]
 ```
+
 2. Ranking: `ranking_annotation.json` contain the ranking annotations of this dataset. The annotations are saved as an array of JSON dictionaries. Each dictionary includes the information of one image. Each image contains ten crop pairs. The crop with more votes is more visually pleasing than the other one. See the following for an example.
+
 ```json
 [
     {
@@ -52,6 +55,7 @@ There are two types of annotations in this dataset: **cropping** and **ranking**
     },
 ]
 ```
+
 ### Results
 
 The following figures demonstrates several examples of comparing the ground truth and the best crop windows determined by various methods.
@@ -68,5 +72,5 @@ The following figures demonstrates several examples of comparing the ground trut
       year={2017}
     }
 
-### Support or Contact
+### Contact
 If you have questions/suggestions, feel free to send an email to (yiling dot chen dot ntu at gmail dot com).
