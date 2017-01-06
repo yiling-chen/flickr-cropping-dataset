@@ -4,12 +4,16 @@ Automatic photo cropping is an important tool for improving visual quality of di
 
 ### Dataset
 
-The final dataset is composed of 3,413 images on Flickr with Creative Commons License.
+To build this dataset, we first collected 31,888 images from Flickr and then employed worker on Amazon Mechanical Turk (AMT) to filter out inappropriate images, such as collage, computer-generated images or images with post-processed frames. The remaining images were than labeled by a group of photography hobbyists to annotate the best cropping windows.
+The crop windows were rated by AMT workers and only those crops that are rated as more visually favorable are kept in the dataset.
+The final dataset is composed of 3,413 images on Flickr with Creative Commons License. The following figure demonstrates some examples from our dataset.
+For each image, we further generated 10 crop pairs and sent them to AMT to determine their visual preferences.
+For more details of the image collection and annotation procedures, please refer to our [paper](#paper).
 
 ![Example images](images/dataset.jpg)
 
 
-> **Note:** Run `scripts/download_ranking_images` to automatically download the images from Flickr website.
+> **Note:** Clone the Github repository and run `scripts/download_ranking_images` to automatically download the images from Flickr website.
 
 There are two types of annotations in this dataset: **cropping** and **ranking**.
 
@@ -30,7 +34,7 @@ There are two types of annotations in this dataset: **cropping** and **ranking**
 ]
 ```
 
-* Ranking: `ranking_annotation.json` contain the ranking annotations of this dataset. The annotations are saved as an array of JSON dictionaries. Each dictionary includes the information of one image. Each image contains ten crop pairs. The crop with more votes is more visually pleasing than the other one. See the following for an example.
+* Ranking: `ranking_annotation.json` contain the ranking annotations of this dataset. The annotations are saved as an array of JSON dictionaries. Each dictionary includes the information of one image. Each image contains 10 crop pairs. The crop with more votes is more visually pleasing than the other one. See the following for an example only showing 1 crop pair.
 
 ```json
 [
@@ -71,7 +75,7 @@ For more quantitative analysis and performance comparison, please refer to our [
 
 This work is going to be published in IEEE Winter Conference on Applications of Computer Vision (WACV) 2017. You can find a preprint version on [arXiv]().
 
-**If you use this dataset in an academic paper, please consider to cite:**
+**If you use this dataset in an academic paper, please cite the following article:**
 
     @inproceedings{chen-wacv2017,
       title={Quantitative Analysis of Automatic Image Cropping Algorithms:A Dataset and Comparative Study},
