@@ -73,7 +73,7 @@ For more quantitative analysis and performance comparison, please refer to our [
 
 ### Paper <a name="paper"></a>
 
-This work is going to be published in IEEE Winter Conference on Applications of Computer Vision (WACV) 2017. You can find a preprint version on [arXiv]().
+This work is going to be published in IEEE Winter Conference on Applications of Computer Vision (WACV) 2017. You can find a preprint version on [arXiv](http://arxiv.org/abs/1701.01480).
 
 **If you use this dataset in an academic paper, please cite the following article:**
 
