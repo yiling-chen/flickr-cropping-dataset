@@ -2,7 +2,7 @@
 
 This repository contains the dataset used in the following paper:
 
-Yi-Ling Chen, Tzu-Wei Huang, Kai-Han Chang, Yu-Chen Tsai, [Hwann-Tzong Chen](http://www.cs.nthu.edu.tw/~htchen/), [Bing-Yu Chen](http://graphics.csie.ntu.edu.tw/~robin/). (2017). ["Quantitative Analysis of Automatic Image Cropping Algorithms:A Dataset and Comparative Study"](http://arxiv.org/abs/1701.01480). IEEE Winter Conference on Applications of Computer Vision (WACV) 2017.
+[Yi-Ling Chen](https://yiling-chen.github.io/), Tzu-Wei Huang, Kai-Han Chang, Yu-Chen Tsai, [Hwann-Tzong Chen](http://www.cs.nthu.edu.tw/~htchen/), [Bing-Yu Chen](http://graphics.csie.ntu.edu.tw/~robin/). (2017). ["Quantitative Analysis of Automatic Image Cropping Algorithms:A Dataset and Comparative Study"](http://arxiv.org/abs/1701.01480). IEEE Winter Conference on Applications of Computer Vision (WACV) 2017.
 
 **If you use this dataset in an academic paper, please cite the following article:**
 
