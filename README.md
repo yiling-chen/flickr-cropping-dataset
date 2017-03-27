@@ -9,7 +9,7 @@ This repository contains the dataset used in the following paper:
     @inproceedings{chen-wacv2017,
       title={Quantitative Analysis of Automatic Image Cropping Algorithms:A Dataset and Comparative Study},
       author={Yi-Ling Chen and Tzu-Wei Huang and Kai-Han Chang and Yu-Chen Tsai and Hwann-Tzong Chen and Bing-Yu Chen},
-      booktitle={WACV 2017},
+      booktitle={IEEE WACV 2017},
       year={2017}
     }
 
@@ -75,6 +75,13 @@ $ python download_ranking_images -w 4
     },
 ]
 ```
+
+## Evaluation
+Currently, evaluation on the test set is per request. If you have a cropping method and want to evaluate its accuracy, please send the author your results in a text file with each line containing:
+```
+filename x y w h
+```
+where (x, y, w, h) indicates the best crop determined by the cropping algorithm. We will report the the scores in the same metrics of our paper as soon as possible.
 
 ## License
 MIT License
