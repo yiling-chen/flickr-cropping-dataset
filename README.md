@@ -4,15 +4,6 @@ This repository contains the dataset used in the following paper:
 
 [Yi-Ling Chen](https://yiling-chen.github.io/), Tzu-Wei Huang, Kai-Han Chang, Yu-Chen Tsai, [Hwann-Tzong Chen](http://www.cs.nthu.edu.tw/~htchen/), [Bing-Yu Chen](http://graphics.csie.ntu.edu.tw/~robin/). (2017). ["Quantitative Analysis of Automatic Image Cropping Algorithms:A Dataset and Comparative Study"](http://arxiv.org/abs/1701.01480). IEEE Winter Conference on Applications of Computer Vision (WACV) 2017.
 
-**If you use this dataset in an academic paper, please cite the following article:**
-
-    @inproceedings{chen-wacv2017,
-      title={Quantitative Analysis of Automatic Image Cropping Algorithms:A Dataset and Comparative Study},
-      author={Yi-Ling Chen and Tzu-Wei Huang and Kai-Han Chang and Yu-Chen Tsai and Hwann-Tzong Chen and Bing-Yu Chen},
-      booktitle={IEEE WACV 2017},
-      year={2017}
-    }
-
 For more information regarding the paper, please visit https://yiling-chen.github.io/flickr-cropping-dataset/
 
 ## Download the dataset
@@ -76,9 +67,21 @@ $ python download_ranking_images -w 4
 ]
 ```
 
+## Evaluation
+For a completely fair comparison with the baselines reported in the paper, you may want to evaluate your image cropper with the same sliding windows as specified in `sliding_window.json`.
+
 ## License
 MIT License
 
 
 ## Questions?
 If you have questions/suggestions, please feel free to send an email to (yiling dot chen dot ntu at gmail dot com).
+
+**If you use this dataset in an academic paper, please cite the following article:**
+
+    @inproceedings{chen-wacv2017,
+      title={Quantitative Analysis of Automatic Image Cropping Algorithms:A Dataset and Comparative Study},
+      author={Yi-Ling Chen and Tzu-Wei Huang and Kai-Han Chang and Yu-Chen Tsai and Hwann-Tzong Chen and Bing-Yu Chen},
+      booktitle={IEEE WACV 2017},
+      year={2017}
+    }
