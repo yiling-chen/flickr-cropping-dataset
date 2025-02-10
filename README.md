@@ -19,6 +19,9 @@ The above command will launch 4 worker thread to download the images to a pre-de
 $ python download_ranking_images -w 4
 ```
 
+**Update:** Since many Flickr images in this dataset are no longer available for download, I am sharing my local copy via [Google Drive](https://drive.google.com/file/d/11R4przja3GE3j36wrtMSovvHMuw-oeOn/view?usp=sharing). Please note that these images are intended for research purposes only.
+
+
 ## Annotation
 
 1. Cropping: `cropping_training_set.json` and `cropping_testing_set.json` contain the cropping annotations of this dataset. The annotations are saved as an array of JSON dictionaries. Each dictionary includes the information of one image. See the following for an example.
